@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';
-import { BASE_URL } from '../App.jsx';
+const BASE_URL = "http://localhost:8080";
 import EditOrder from './EditOrder.jsx';
 
 export default function OrderHistory({ customerId, token }) {

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { BASE_URL } from '../App.jsx';
+const BASE_URL = "http://localhost:8080";
 
 export default function Register() {
   const [form, setForm] = useState({ name: '', email: '', password: '' });

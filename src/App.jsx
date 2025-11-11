@@ -1,82 +1,44 @@
-import React, { useState } from 'react';
-import { Routes, Route, Link, Outlet, Navigate } from 'react-router-dom';
-import Register from './components/Register.jsx';
-import Login from './components/Login.jsx';
-import Order from './components/Order.jsx';
-import OrderHistory from './components/OrderHistory.jsx';
+import React from "react";
+import { Routes, Route, Link } from "react-router-dom";
+import Register from "./components/Register.jsx";
+import Login from "./components/Login.jsx";
+import Order from "./components/Order.jsx";
+import OrderHistory from "./components/OrderHistory.jsx";
+import EditOrder from "./components/EditOrder.jsx";
+import Settings from "./components/Settings.jsx";
 
-export const BASE_URL = 'http://localhost:8080';
-
-function AppLayout({ isAuthenticated, onLogout }) {
+function App() {
   return (
-    <>
-      <nav className="p-4 border-b mb-4 flex gap-4">
-        <span className="text-3xl font-bold">Customer Order Management</span>
+    <div>
+      <nav
+        style={{
+          display: "flex",
+          gap: "16px",
+          alignItems: "center",
+          padding: "10px",
+          borderBottom: "1px solid #ccc",
+        }}
+      >
+        <span style={{ fontWeight: "bold" }}>Customer Order Management</span>
         <Link to="/register">Register</Link>
         <Link to="/login">Login</Link>
-        {isAuthenticated && (
-          <>
-            <Link to="/order">Order</Link>
-            <Link to="/history">Order History</Link>
-            <button type="button" onClick={onLogout}>
-              Logout
-            </button>
-          </>
-        )}
+        <Link to="/orders">Orders</Link>
+        <Link to="/settings">Settings</Link>
       </nav>
-      <Outlet />
-    </>
+
+      <div style={{ padding: "16px" }}>
+        <Routes>
+          <Route path="/" element={<Register />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/orders" element={<Order />} />
+          <Route path="/orders/history" element={<OrderHistory />} />
+          <Route path="/orders/:id/edit" element={<EditOrder />} />
+          <Route path="/settings" element={<Settings />} />
+        </Routes>
+      </div>
+    </div>
   );
 }
 
-export default function App() {
-  const [customerId, setCustomerId] = useState(null);
-  const [customerName, setCustomerName] = useState('');
-  const [token, setToken] = useState('');
-  const isAuthenticated = !!token && !!customerId;
-
-  const handleLogin = (id, jwtToken, name) => {
-    setCustomerId(id);
-    setToken(jwtToken);
-    setCustomerName(name);
-  };
-
-  const handleLogout = () => {
-    setCustomerId(null);
-    setToken('');
-    setCustomerName('');
-  };
-
-  return (
-    <Routes>
-      <Route
-        path="/"
-        element={<AppLayout isAuthenticated={isAuthenticated} onLogout={handleLogout} />}
-      >
-        <Route index element={<Navigate to="/register" />} />
-        <Route path="register" element={<Register />} />
-        <Route path="login" element={<Login onLogin={handleLogin} />} />
-        <Route
-          path="order"
-          element={
-            isAuthenticated ? (
-              <Order customerId={customerId} token={token} customerName={customerName} />
-            ) : (
-              <Navigate to="/login" replace />
-            )
-          }
-        />
-        <Route
-          path="history"
-          element={
-            isAuthenticated ? (
-              <OrderHistory customerId={customerId} token={token} />
-            ) : (
-              <Navigate to="/login" replace />
-            )
-          }
-        />
-      </Route>
-    </Routes>
-  );
-}
+export default App;
